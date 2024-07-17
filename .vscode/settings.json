@@ -1,0 +1,20 @@
+{
+    "powershell.scriptAnalysis.settingsPath": "PSScriptAnalyzerSettings.psd1",
+    "powershell.codeFormatting.addWhitespaceAroundPipe": true,
+    "powershell.codeFormatting.openBraceOnSameLine": false,
+    "powershell.codeFormatting.newLineAfterOpenBrace": true,
+    "editor.rulers": [
+        80,
+        120
+    ],
+    "editor.formatOnSave": true,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4,
+    "[json]": {
+        "editor.tabSize": 2
+    },
+    "[powershell]": {
+        "editor.tabSize": 1,
+        "editor.insertSpaces": true
+    }
+}
