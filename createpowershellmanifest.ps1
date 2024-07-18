@@ -73,6 +73,7 @@ try
 
     Write-Host "::group::Updating manifest at [$($ManifestPath)]"
     Copy-Item "$($ModuleRoot)\$($ModuleName).psd1" -Destination $outputPath -ErrorAction Stop
+    (Get-ChildItem -Path $outputPath -Recurse).FullName
     Write-Host "Copied module manifest to destination"
     Write-Host "::endgroup::"
 
