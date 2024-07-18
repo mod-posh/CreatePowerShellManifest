@@ -13,7 +13,9 @@ try
 
     [bool]$Debug = [System.Convert]::ToBoolean($Debug)
 
-    Write-Host "::debug::DebugMode Enabled : $($Debug)"
+    Write-Host "DebugMode Enabled : $($Debug)"
+    Write-Host "Root: $($PWD)"
+    Write-Host "Workspace: $( $env:GITHUB_WORKSPACE)"
     (Get-ChildItem $env:GITHUB_WORKSPACE -Recurse).FullName
 
     if ([string]::IsNullOrEmpty($Source))
