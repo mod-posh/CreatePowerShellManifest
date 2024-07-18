@@ -37,7 +37,7 @@ try
     }
 
     $ManifestRoot = Get-ChildItem -Path $SourcePath -Filter "$($ModuleName).psd1" -Recurse
-    $ModuleRoot = $ManifestRoot.Parent
+    $ModuleRoot = $ManifestRoot.Directory.FullName
     $ManifestPath = "$($outputPath)\$($ModuleName).psd1"
 
     if ($Debug)
