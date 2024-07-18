@@ -72,6 +72,7 @@ try
     Import-Module BuildHelpers
     Write-Host "::endgroup::"
 
+    Write-Host "::group::Testing Output [$($outputPath)]"
     if (Test-Path -Path $outputPath) {
         $null = Remove-Item -Path $outputPath -Recurse -Force
     } else {
@@ -79,13 +80,8 @@ try
     }
 
     Write-Host "::group::Updating manifest at [$($ManifestPath)]"
-
-    write-host "Start copy"
-    Get-Item -Path "$($ModuleRoot)\$($ModuleName).psd1"
-    Copy-Item -Path "$($ModuleRoot)\$($ModuleName).psd1" -Destination $ManifestPath -Verbose
-    write-host "After copy"
-    Get-Item -Path $ManifestPath
-    (Get-ChildItem -Path $outputPath -Recurse).FullName
+    Copy-Item -Path "$($ModuleRoot)\$($ModuleName).psd1" -Destination $ManifestPath
+    Get-Content -Path $ManifestPath -Raw
     Write-Host "Copied module manifest to destination"
     Write-Host "::endgroup::"
 
