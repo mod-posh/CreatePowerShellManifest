@@ -83,8 +83,6 @@ try
 
     Write-Host "::group::Updating manifest at [$($ManifestPath)]"
     Copy-Item -Path "$($ModuleRoot)\$($ModuleName).psd1" -Destination $ManifestPath
-    Copy-Item -Path "$($ModuleRoot)\$($ModuleName).psd1" -Destination $ManifestPath
-    Get-Content -Path $ManifestPath -Raw
     Write-Host "Copied module manifest to destination"
     Write-Host "::endgroup::"
 
