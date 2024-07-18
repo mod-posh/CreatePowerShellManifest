@@ -13,6 +13,9 @@ try
 
     [bool]$Debug = [System.Convert]::ToBoolean($Debug)
 
+    Write-Host "::debug::DebugMode Enabled : $($Debug)"
+    (Get-ChildItem $env:GITHUB_WORKSPACE -Recurse).FullName
+
     if ([string]::IsNullOrEmpty($Source))
     {
         $sourcePath = "$($env:GITHUB_WORKSPACE)"
