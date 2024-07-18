@@ -4,12 +4,14 @@ param (
     [string]$Output = "",
     [string]$Imports,
     [string]$Assemblies = "",
-    [bool]$Debug = $false
+    [string]$Debug = 'false'
 )
 try
 {
     Write-Host "::group::Starting the Create PowerShell Module task..."
     Write-Host "::group::Setting up variables"
+
+    [bool]$Debug = [System.Convert]::ToBoolean($Debug)
 
     if ([string]::IsNullOrEmpty($Source))
     {

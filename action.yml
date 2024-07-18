@@ -9,24 +9,30 @@ branding:
 inputs:
   ModuleName:
     description: 'The name of the PowerShell module'
+    type: string
     required: true
   Source:
     description: 'The source directory containing the module (relative to the workspace)'
+    type: string
     required: false
     default: ''
   Output:
     description: 'The output directory for the manifest (relative to the workspace)'
+    type: string
     required: false
     default: ''
   Imports:
     description: 'Comma-separated list of import folders'
+    type: string
     required: true
   Assemblies:
     description: 'Comma-separated list of assembly directories'
+    type: string
     required: false
     default: ''
   Debug:
     description: 'Enable debug mode'
+    type: string
     required: false
     default: 'false'
 
