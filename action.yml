@@ -41,11 +41,4 @@ runs:
   steps:
     - name: Run PowerShell script
       shell: pwsh
-      run: ./createpowershellmanifest.ps1
-      with:
-        ModuleName: ${{ inputs.ModuleName }}
-        Source: ${{ inputs.Source }}
-        Output: ${{ inputs.Output }}
-        Imports: ${{ inputs.Imports }}
-        Assemblies: ${{ inputs.Assemblies }}
-        Debug: ${{ inputs.Debug }}
+      run: ./createpowershellmanifest.ps1 -ModuleName '${{ inputs.ModuleName }}' -Source '${{ inputs.Source }}' -Output '${{ inputs.Output }}' -Imports '${{ inputs.Imports }}' -Assemblies '${{ inputs.Assemblies }}' -Debug '${{ inputs.Debug }}'
