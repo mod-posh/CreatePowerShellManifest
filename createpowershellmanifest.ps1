@@ -37,13 +37,15 @@ try
 
     $ManifestRoot = Get-ChildItem -Path $SourcePath -Filter "$($ModuleName).psd1" -Recurse
     $ModuleRoot = $ManifestRoot.Directory.FullName
-    $ManifestPath = "$($outputPath)\$($ModuleName).psd1"
+    $Destination = "$($outputPath)\$($ModuleName)"
+    $ManifestPath = "$($Destination)\$($ModuleName).psd1"
 
     if ($Debug)
     {
         Write-Host "ModuleName   : $($ModuleName)"
         Write-Host "SourcePath   : $($sourcePath)"
         Write-Host "OutputPath   : $($outputPath)"
+        Write-Host "Destination  : $($Destination)"
         Write-Host "ManifestPath : $($ManifestPath)"
         Write-Host "ModuleRoot   : $($ModuleRoot)"
         Write-Host "Imports      : $($imports)"
@@ -69,6 +71,12 @@ try
     }
     Import-Module BuildHelpers
     Write-Host "::endgroup::"
+
+    if (Test-Path -Path $outputPath) {
+        $null = Remove-Item -Path $outputPath -Recurse -Force
+    } else {
+        $null = New-Item -ItemType Directory -Path $Destination
+    }
 
     Write-Host "::group::Updating manifest at [$($ManifestPath)]"
 
