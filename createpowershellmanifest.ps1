@@ -74,7 +74,7 @@ try
 
     write-host "Start copy"
     Get-Item -Path "$($ModuleRoot)\$($ModuleName).psd1"
-    Copy-Item "$($ModuleRoot)\$($ModuleName).psd1" -Destination $outputPath -ErrorAction Stop
+    Copy-Item -Path "$($ModuleRoot)\$($ModuleName).psd1" -Destination $outputPath -Verbose
     write-host "After copy"
     Get-Item -Path $ManifestPath
     (Get-ChildItem -Path $outputPath -Recurse).FullName
