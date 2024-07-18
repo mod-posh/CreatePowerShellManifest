@@ -36,18 +36,19 @@ try
         $outputPath = "$($env:GITHUB_WORKSPACE)\$($Output)"
     }
 
-    $modulePath = "$($outputPath)\$($ModuleName).psm1"
+    $ManifestRoot = Get-ChildItem -Path $SourcePath -Filter "$($ModuleName).psd1" -Recurse
+    $ModuleRoot = $ManifestRoot.Parent
     $ManifestPath = "$($outputPath)\$($ModuleName).psd1"
 
     if ($Debug)
     {
-        Write-Host "::debug::ModuleName   : $($ModuleName)"
-        Write-Host "::debug::SourcePath   : $($sourcePath)"
-        Write-Host "::debug::OutputPath   : $($outputPath)"
-        Write-Host "::debug::ModulePath   : $($modulePath)"
-        Write-Host "::debug::ManifestPath : $($ManifestPath)"
-        Write-Host "::debug::Imports      : $($imports)"
-        Write-Host "::debug::Assemblies   : $($Assemblies)"
+        Write-Host "ModuleName   : $($ModuleName)"
+        Write-Host "SourcePath   : $($sourcePath)"
+        Write-Host "OutputPath   : $($outputPath)"
+        Write-Host "ManifestPath : $($ManifestPath)"
+        Write-Host "ModuleRoot   : $($ModuleRoot)"
+        Write-Host "Imports      : $($imports)"
+        Write-Host "Assemblies   : $($Assemblies)"
     }
 
     $importFolders = $imports.Split(',')
@@ -71,7 +72,7 @@ try
     Write-Host "::endgroup::"
 
     Write-Host "::group::Updating manifest at [$($ManifestPath)]"
-    Copy-Item "$($sourcePath)\$($ModuleName).psd1" -Destination $outputPath -ErrorAction Stop
+    Copy-Item "$($ModuleRoot)\$($ModuleName).psd1" -Destination $outputPath -ErrorAction Stop
     Write-Host "Copied module manifest to destination"
     Write-Host "::endgroup::"
 
@@ -80,10 +81,10 @@ try
 
     foreach ($importFolder in $importFolders)
     {
-        if (Test-Path "$($sourcePath)\$($importFolder)")
+        if (Test-Path "$($ModuleRoot)\$($importFolder)")
         {
             Write-Host "Processing public functions in folder: $($importFolder)"
-            $FileList = Get-ChildItem "$($sourcePath)\$($importFolder)\*.ps1" -Exclude "*.Tests.ps1"
+            $FileList = Get-ChildItem "$($ModuleRoot)\$($importFolder)\*.ps1" -Exclude "*.Tests.ps1"
             foreach ($File in $FileList)
             {
                 $Code = Get-Content -Path $File.FullName -Raw
@@ -93,7 +94,7 @@ try
                 }, $true)
                 if ($Debug)
                 {
-                    Write-Host "::debug::$($Function.Name)"
+                    Write-Host "$($Function.Name)"
                 }
                 $Functions += $Function.Name
             }
