@@ -47,27 +47,36 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
-          path: MySuperModule  # Custom path for the checkout
+          path: 'Repo'
 
       - name: Create PowerShell Manifest
-        uses: your-username/your-repo@v1  # Replace with your repository details for the createpowershellmanifest action
+        uses: mod-posh/CreatePowerShellManifest@v0.0.1.0
         with:
-          ModuleName: 'your-module'
-          Source: 'MySuperModule'  # Use the custom path here
+          ModuleName: 'SpnLibrary'
+          Source: 'Repo'
+          Imports: 'public'
           Debug: 'true'
 
       - name: Create PowerShell Module
-        uses: your-username/your-repo@v1  # Replace with your repository details for the createpowershellmodule action
+        uses: mod-posh/CreatePowerShellModule@v0.0.1.0
         with:
-          ModuleName: 'your-module'
-          Source: 'MySuperModule'  # Use the custom path here
-          Imports: 'folder1,folder2'
+          ModuleName: 'SpnLibrary'
+          Source: 'Repo'
+          Imports: 'public'
+          Debug: 'true'
+
+      - name: Test PowerShell Module
+        uses: mod-posh/TestpowerShellModule@main
+        with:
+          ModuleName: 'SpnLibrary'
+          Source: 'Repo'
           Debug: 'true'
 
       - name: Upload PowerShell Module
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: your-module-output
           path: ${{ github.workspace }}/output
+```
