@@ -16,7 +16,6 @@ try
     Write-Host "DebugMode Enabled : $($Debug)"
     Write-Host "Root: $($PWD)"
     Write-Host "Workspace: $( $env:GITHUB_WORKSPACE)"
-    (Get-ChildItem $env:GITHUB_WORKSPACE -Recurse).FullName
 
     if ([string]::IsNullOrEmpty($Source))
     {
@@ -76,6 +75,7 @@ try
     write-host "Start copy"
     Get-Item -Path "$($ModuleRoot)\$($ModuleName).psd1"
     Copy-Item "$($ModuleRoot)\$($ModuleName).psd1" -Destination $outputPath -ErrorAction Stop
+    write-host "After copy"
     Get-Item -Path $ManifestPath
     (Get-ChildItem -Path $outputPath -Recurse).FullName
     Write-Host "Copied module manifest to destination"
