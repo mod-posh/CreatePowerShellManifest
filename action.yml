@@ -41,4 +41,5 @@ runs:
   steps:
     - name: Run PowerShell script
       shell: pwsh
-      run: ./createpowershellmanifest.ps1 -ModuleName '${{ inputs.ModuleName }}' -Source '${{ inputs.Source }}' -Output '${{ inputs.Output }}' -Imports '${{ inputs.Imports }}' -Assemblies '${{ inputs.Assemblies }}' -Debug '${{ inputs.Debug }}'
+      run: |
+        & $env:GITHUB_ACTION_PATH\\createpowershellmanifest.ps1 -ModuleName '${{ inputs.ModuleName }}' -Source '${{ inputs.Source }}' -Output '${{ inputs.Output }}' -Imports '${{ inputs.Imports }}' -Assemblies '${{ inputs.Assemblies }}' -Debug '${{ inputs.Debug }}'
