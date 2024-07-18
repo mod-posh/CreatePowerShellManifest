@@ -35,8 +35,8 @@ try
         $outputPath = "$($env:GITHUB_WORKSPACE)\$($Output)"
     }
 
-    $ManifestRoot = Get-ChildItem -Path $SourcePath -Filter "$($ModuleName).psd1" -Recurse
-    $ModuleRoot = $ManifestRoot.Directory.FullName
+    $Module = Get-ChildItem -Path $SourcePath -Filter "$($ModuleName).psd1" -Recurse
+    $ModuleRoot = $Module.Directory.FullName
     $Destination = "$($outputPath)\$($ModuleName)"
     $ManifestPath = "$($Destination)\$($ModuleName).psd1"
 
