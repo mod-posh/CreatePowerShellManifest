@@ -22,8 +22,8 @@ try {
     $sourcePath = if ([string]::IsNullOrEmpty($Source)) { $env:GITHUB_WORKSPACE } else { Join-Path $env:GITHUB_WORKSPACE $Source }
     $outputPath = if ([string]::IsNullOrEmpty($Output)) { Join-Path $env:GITHUB_WORKSPACE "output" } else { Join-Path $env:GITHUB_WORKSPACE $Output }
 
-    $Module = Get-ChildItem -Path $sourcePath -Filter "$ModuleName.psd1" -Recurse
-    $ModuleRoot = $Module.Directory.FullName
+    $Manifest = Get-ChildItem -Path $sourcePath -Filter "$ModuleName.psd1" -Recurse
+    $ManifestRoot = $Manifest.Directory.FullName
     $Destination = Join-Path $outputPath $ModuleName
     $ManifestPath = Join-Path $Destination "$ModuleName.psd1"
 
@@ -33,7 +33,7 @@ try {
         Write-Host "OutputPath   : $outputPath"
         Write-Host "Destination  : $Destination"
         Write-Host "ManifestPath : $ManifestPath"
-        Write-Host "ModuleRoot   : $ModuleRoot"
+        Write-Host "ManifestRoot : $ManifestRoot"
         Write-Host "Imports      : $Imports"
         Write-Host "Assemblies   : $Assemblies"
     }
@@ -60,31 +60,40 @@ try {
     Write-Host "::endgroup::"
     Write-Host "::group::Updating manifest at $ManifestPath"
 
-    Copy-Item -Path (Join-Path $ModuleRoot "$ModuleName.psd1") -Destination $ManifestPath
+    Copy-Item -Path (Join-Path $ManifestRoot "$ModuleName.psd1") -Destination $ManifestPath
     Write-Host "Copied module manifest to destination"
 
     Write-Host "::endgroup::"
     Write-Host "::group::Collecting Functions"
 
-    $Functions = @()
+    $Functions = [System.Collections.Generic.List[string]]::new()
 
     foreach ($importFolder in $importFolders) {
-        $importFolderPath = Join-Path $ModuleRoot $importFolder
+        $importFolderPath = Join-Path $ManifestRoot $importFolder
+
         if (Test-Path -Path $importFolderPath) {
             Write-Host "Processing public functions in folder: $importFolder"
-            $FileList = Get-ChildItem -Path (Join-Path $importFolderPath "*.ps1") -Exclude "*.Tests.ps1"
+
+            $FileList = Get-ChildItem -Path $importFolderPath -Filter "*.ps1" |
+                        Where-Object { $_.Name -notlike "*.Tests.ps1" }
+
             foreach ($File in $FileList) {
                 $Code = Get-Content -Path $File.FullName -Raw
-                $Function = [System.Management.Automation.Language.Parser]::ParseInput($Code, [ref]$null, [ref]$null).FindAll({
+
+                $FunctionAsts = [System.Management.Automation.Language.Parser]::ParseInput(
+                    $Code, [ref]$null, [ref]$null
+                ).FindAll({
                     param($ast)
                     $ast -is [System.Management.Automation.Language.FunctionDefinitionAst]
                 }, $true)
-                if ($Debug) {
-                    Write-Host "$($Function.Name)"
+
+                foreach ($fn in $FunctionAsts) {
+                    if ($Debug) { Write-Host $fn.Name }
+                    $Functions.Add($fn.Name.Trim())
                 }
-                $Functions += $Function.Name
             }
-        } else {
+        }
+        else {
             Write-Host "##[warning]Public function folder not found: $importFolder"
         }
     }
