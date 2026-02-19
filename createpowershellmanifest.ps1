@@ -11,8 +11,6 @@ try {
     Write-Host "::group::Starting the Create PowerShell Module task..."
     Write-Host "::group::Setting up variables"
 
-    $Debug = [System.Convert]::ToBoolean($Debug)
-
     if ($Debug) {
         Write-Host "DebugMode Enabled : $Debug"
         Write-Host "Root: $PWD"
